@@ -7,5 +7,5 @@ Required modules and how to install:
 	sudo python -m pip install purestorage
 
 Work in progress. 
-Currently, reporting is the only option is working. Create and Destroy options will be added for hosts, volumes, and protection groups.
+Reporting is the only option currently working. Create and Destroy options will be added for hosts, volumes, and protection groups.
 
