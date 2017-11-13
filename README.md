@@ -6,9 +6,9 @@ Required modules:
   purestorage
 
   Install via Linux:
-  Clone this repo or download ZIP under /opt/ (should look like /opt/PureStorage_RestAPI/) and run in the PureStorage_RESTAPI directory:
+  Clone this repo or download ZIP under /opt/ (should look like /opt/PureStorage_RestAPI/) and run in the PureStorage_RestAPI directory:
     sudo pip install .
-  Upgrading will need to be ran in the same directory as setup.py and run:
+  Upgrading will need to be ran in the same directory as setup.py, run:
     sudo pip install --upgrade .
 
 Work in progress. 
