@@ -6,8 +6,10 @@ Required modules:
   purestorage
 
   Install via Linux:
-  Clone this repo and run in the PureStorage_RESTAPI directory:
-  sudo pip install .
+  Clone this repo or download ZIP under /opt/ (should look like /opt/PureStorage_RestAPI/) and run in the PureStorage_RESTAPI directory:
+    sudo pip install .
+  Upgrading will need to be ran in the same directory as setup.py and run:
+    sudo pip install --upgrade .
 
 Work in progress. 
 "List" is the only fully functioning subparser. Create, Disconnect, and Destroy options will be added for hosts, volumes, and protection groups.
