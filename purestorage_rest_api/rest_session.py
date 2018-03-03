@@ -45,6 +45,7 @@ def parse_arguments():
     list_parser = subparsers.add_parser('list', help='List contents.')
     list_parser.add_argument(
         '--volumes', action='store_true', help='List volumes on array.')
+    list_parser.add_argument('--alert_distro', action='store_true', help='Print a list of distros that receive alerts.')
     list_parser.add_argument(
         '--initiators', action='store_true', help='List hosts connected to the array.')
     list_parser.add_argument('--initiator_connections',
@@ -100,6 +101,9 @@ def main():
         if array.volumes:
             decorated = flash_array.DecorateData(array.list_volumes())
             decorated.decorate_volumes()
+        if array.alert_distro:
+            decorated = flash_array.DecorateData(array.alert_distro())
+            decorated.decorate_alert_recipients()
         if array.initiators:
             decorated = flash_array.DecorateData(array.list_initiators())
             decorated.decorated_initiators()

@@ -38,6 +38,29 @@ class ListFlashArray(FlashArray):
     """
     Class inheritance to list FlashArray attributes.
     """
+    """
+    list_api_tokens()
+    list_drives()
+    list_hardware()
+    list_hgroups()
+    list_messages()
+    list_network_interfaces()
+    list_pgroups()
+    list_ports()
+    list_publickeys()
+    list_snmp_managers()
+    list_subnets()
+    list_volume_block_differences()
+    list_volume_private_connections()
+    list_volume_shared_connections()
+    
+    """
+
+    def alert_distro(self):
+        """List all recipients for alerting."""
+        print '[*] Recipients of alerts.'
+        user_distros = self.array.list_alert_recipients()
+        return user_distros
 
     def list_volumes(self):
         """List volumes that are on array."""
@@ -47,7 +70,7 @@ class ListFlashArray(FlashArray):
 
     def list_initiators(self):
         """List of initiators."""
-        print '[*] initiators connected to array.'
+        print '[*] Initiators connected to array.'
         initiators = self.array.list_hosts()
         return initiators
 
@@ -110,6 +133,13 @@ class DecorateData(object):
 
     def __init__(self, import_list):
         self.import_list = import_list
+
+    def decorate_alert_recipients(self):
+        """Formar list_alert_recipients into a table."""
+        table = prettytable.PrettyTable(['Enabled', 'Name'])
+        for dictionary in self.import_list:
+            table.add_row([dictionary['enabled'], dictionary['name']])
+        print table
 
     def decorate_volumes(self):
         """Format volumes into table format."""
