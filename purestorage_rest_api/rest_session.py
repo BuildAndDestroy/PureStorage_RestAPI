@@ -45,7 +45,10 @@ def parse_arguments():
     list_parser = subparsers.add_parser('list', help='List contents.')
     list_parser.add_argument(
         '--volumes', action='store_true', help='List volumes on array.')
-    list_parser.add_argument('--alert_distro', action='store_true', help='Print a list of distros that receive alerts.')
+    list_parser.add_argument('--alert_distro', action='store_true',
+                             help='Print a list of distros that receive alerts.')
+    list_parser.add_argument(
+        '--drives', action='store_true', help='List drives on the array.')
     list_parser.add_argument(
         '--initiators', action='store_true', help='List hosts connected to the array.')
     list_parser.add_argument('--initiator_connections',
@@ -86,6 +89,7 @@ def parse_arguments():
 
     return args
 
+
 def main():
     """
     Pull from one subparser; list, create, disconnect, and destroy.
@@ -96,14 +100,17 @@ def main():
     print '[*] Connecting to {}'.format(args.working_array)
 
     if args.command == 'list':
-        array = flash_array.ListFlashArray(args.working_array, args.api_token, args.secure, args.volumes,
-                                           args.initiators, args.initiator_connections, args.hgroup_connect, args.connect)
+        array = flash_array.ListFlashArray(args.working_array, args.api_token, args.secure, args.volumes, args.drives,
+                                           args.alert_distro, args.initiators, args.initiator_connections, args.hgroup_connect, args.connect)
         if array.volumes:
             decorated = flash_array.DecorateData(array.list_volumes())
             decorated.decorate_volumes()
         if array.alert_distro:
-            decorated = flash_array.DecorateData(array.alert_distro())
+            decorated = flash_array.DecorateData(array.list_alert_distro())
             decorated.decorate_alert_recipients()
+        if array.drives:
+            decorated = flash_array.DecorateData(array.list_array_drives())
+            decorated.decorate_list_drives()
         if array.initiators:
             decorated = flash_array.DecorateData(array.list_initiators())
             decorated.decorated_initiators()

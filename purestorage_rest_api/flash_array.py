@@ -12,13 +12,15 @@ class FlashArray(object):
     Class to compile array attributes to query requests through REST API.
     """
 
-    def __init__(self, working_array, api_token, secure, volumes=None, initiators=None, initiator_connections=None, hgroup_connect=None, connect=None, host=None, hgroup=None, snapshot=None, pgroup=None):
+    def __init__(self, working_array, api_token, secure, volumes=None, drives=None, alert_distro=None, initiators=None, initiator_connections=None, hgroup_connect=None, connect=None, host=None, hgroup=None, snapshot=None, pgroup=None):
         self.working_array = working_array
         self.api_token = api_token
         self.https = secure
         self.array = purestorage.FlashArray(
             self.working_array, api_token=self.api_token, verify_https=self.https)
         self.volumes = volumes or None
+        self.drives = drives or None
+        self.alert_distro = alert_distro or None
         self.initiators = initiators or None
         self.initiator_connections = initiator_connections or None
         self.hgroup_connect = hgroup_connect or None
@@ -53,14 +55,19 @@ class ListFlashArray(FlashArray):
     list_volume_block_differences()
     list_volume_private_connections()
     list_volume_shared_connections()
-    
     """
 
-    def alert_distro(self):
+    def list_alert_distro(self):
         """List all recipients for alerting."""
         print '[*] Recipients of alerts.'
         user_distros = self.array.list_alert_recipients()
         return user_distros
+
+    def list_array_drives(self):
+        """List all drives on the array."""
+        print '[*] Drives on the array.'
+        list_drives = self.array.list_drives()
+        return list_drives
 
     def list_volumes(self):
         """List volumes that are on array."""
@@ -110,7 +117,8 @@ class CreateFlashArray(FlashArray):
         volume = self.volumes[0]
         volume_size = self.volumes[1]
         self.array.create_volume(volume, volume_size)
-        print '[*] Volume {} at size {} is now created!'.format(volume, volume_size)
+        print '[*] Volume {} at size {} is now created!'.format(
+            volume, volume_size)
 
 
 class DestroyFlashArray(FlashArray):
@@ -135,10 +143,29 @@ class DecorateData(object):
         self.import_list = import_list
 
     def decorate_alert_recipients(self):
-        """Formar list_alert_recipients into a table."""
+        """Format list_alert_recipients into a table."""
         table = prettytable.PrettyTable(['Enabled', 'Name'])
         for dictionary in self.import_list:
             table.add_row([dictionary['enabled'], dictionary['name']])
+        print table
+
+    def decorate_list_drives(self):
+        """Format drives into a table."""
+        table = prettytable.PrettyTable(['Capacity',
+                                         'Details',
+                                         'Last_evac_completed',
+                                         'Last_failure',
+                                         'Name',
+                                         'Status',
+                                         'Type'])
+        for dictionary in self.import_list:
+            table.add_row([dictionary['capacity'],
+                           dictionary['details'],
+                           dictionary['last_evac_completed'],
+                           dictionary['last_failure'],
+                           dictionary['name'],
+                           dictionary['status'],
+                           dictionary['type']])
         print table
 
     def decorate_volumes(self):
