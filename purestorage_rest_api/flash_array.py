@@ -12,7 +12,7 @@ class FlashArray(object):
     Class to compile array attributes to query requests through REST API.
     """
 
-    def __init__(self, working_array, api_token, secure, volumes=None, drives=None, alert_distro=None, initiators=None, initiator_connections=None, hgroup_connect=None, connect=None, host=None, hgroup=None, snapshot=None, pgroup=None):
+    def __init__(self, working_array, api_token, secure, volumes=None, drives=None, alert_distro=None, initiators=None, initiator_connections=None, hgroup_connect=None, connect=None, host=None, hgroup=None, snapshot=None, pgroup=None, api_tokens=None):
         self.working_array = working_array
         self.api_token = api_token
         self.https = secure
@@ -29,6 +29,7 @@ class FlashArray(object):
         self.hgroup = hgroup or None
         self.snapshot = snapshot or None
         self.pgroup = pgroup or None
+        self.api_tokens = api_tokens or None
 
     def disconnect_from_flasharray(self):
         """Disconnect from the array, ending REST session."""
@@ -41,8 +42,6 @@ class ListFlashArray(FlashArray):
     Class inheritance to list FlashArray attributes.
     """
     """
-    list_api_tokens()
-    list_drives()
     list_hardware()
     list_hgroups()
     list_messages()
@@ -68,6 +67,12 @@ class ListFlashArray(FlashArray):
         print '[*] Drives on the array.'
         list_drives = self.array.list_drives()
         return list_drives
+
+    def user_api_tokens(self):
+        """Obtain users and their API tokens."""
+        print '[*] User\'s API Tokens.'
+        user_tokens = self.array.list_api_tokens()
+        return user_tokens
 
     def list_volumes(self):
         """List volumes that are on array."""
@@ -147,6 +152,14 @@ class DecorateData(object):
         table = prettytable.PrettyTable(['Enabled', 'Name'])
         for dictionary in self.import_list:
             table.add_row([dictionary['enabled'], dictionary['name']])
+        print table
+
+    def decorate_user_api_tokens(self):
+        """Format user api tokens into a table."""
+        table = prettytable.PrettyTable(['API Token', 'Name', 'Created'])
+        for dictionary in self.import_list:
+            table.add_row([dictionary['api_token'],
+                           dictionary['name'], dictionary['created']])
         print table
 
     def decorate_list_drives(self):

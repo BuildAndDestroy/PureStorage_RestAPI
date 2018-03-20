@@ -57,6 +57,8 @@ def parse_arguments():
         '--hgroup_connect', action='store_true', help='List host group connections.')
     list_parser.add_argument(
         '--connect', action='store_true', help='List connected arrays.')
+    list_parser.add_argument(
+        '--api_tokens', action='store_true', help='List all user\'s api tokens.')
 
     create_parser = subparsers.add_parser(
         'create', help='Create an option on the array.')
@@ -101,7 +103,7 @@ def main():
 
     if args.command == 'list':
         array = flash_array.ListFlashArray(args.working_array, args.api_token, args.secure, args.volumes, args.drives,
-                                           args.alert_distro, args.initiators, args.initiator_connections, args.hgroup_connect, args.connect)
+                                           args.alert_distro, args.initiators, args.initiator_connections, args.hgroup_connect, args.connect, args.api_tokens)
         if array.volumes:
             decorated = flash_array.DecorateData(array.list_volumes())
             decorated.decorate_volumes()
@@ -124,6 +126,9 @@ def main():
         if array.connect:
             decorated = flash_array.DecorateData(array.list_connected_arrays())
             decorated.decorated_connected_arrays()
+        if args.api_tokens:
+            decorated = flash_array.DecorateData(array.user_api_tokens())
+            decorated.decorate_user_api_tokens()
 
     if args.command == 'create':
         array = flash_array.CreateFlashArray(
