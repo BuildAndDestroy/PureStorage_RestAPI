@@ -33,7 +33,7 @@ class FlashArray(object):
 
     def disconnect_from_flasharray(self):
         """Disconnect from the array, ending REST session."""
-        print '[*] Disconnecting from {}'.format(self.working_array)
+        print '\n[*] Disconnecting from {}'.format(self.working_array)
         self.array.invalidate_cookie()
 
 
@@ -58,43 +58,43 @@ class ListFlashArray(FlashArray):
 
     def list_alert_distro(self):
         """List all recipients for alerting."""
-        print '[*] Recipients of alerts.'
+        print '\n[*] Recipients of alerts.'
         user_distros = self.array.list_alert_recipients()
         return user_distros
 
     def list_array_drives(self):
         """List all drives on the array."""
-        print '[*] Drives on the array.'
+        print '\n[*] Drives on the array.'
         list_drives = self.array.list_drives()
         return list_drives
 
     def user_api_tokens(self):
         """Obtain users and their API tokens."""
-        print '[*] User\'s API Tokens.'
+        print '\n[*] User\'s API Tokens.'
         user_tokens = self.array.list_api_tokens()
         return user_tokens
 
     def list_volumes(self):
         """List volumes that are on array."""
-        print '[*] Volumes on array.'
+        print '\n[*] Volumes on array.'
         volumes = self.array.list_volumes()
         return volumes
 
     def list_initiators(self):
         """List of initiators."""
-        print '[*] Initiators connected to array.'
+        print '\n[*] Initiators connected to array.'
         initiators = self.array.list_hosts()
         return initiators
 
     def list_connected_arrays(self):
         """List of connected arrays."""
-        print '[*] Arrays connected to {}'.format(self.working_array)
+        print '\n[*] Arrays connected to {}'.format(self.working_array)
         connected_arrays = self.array.list_array_connections()
         return connected_arrays
 
     def list_initiator_connections(self):
         """List of attributes connected to a host."""
-        print '[*] Host Group attribute details.'
+        print '\n[*] Host Group attribute details.'
         returned_initiator_details = []
         for host in self.initiator_connections:
             returned_initiator_details.append(
@@ -103,7 +103,7 @@ class ListFlashArray(FlashArray):
 
     def list_hgroup_connect(self):
         """List hosts with their host group."""
-        print '[*] Hosts within host groups.'
+        print '\n[*] Hosts within host groups.'
         hgroups = self.array.list_hgroups()
         return hgroups
 
@@ -118,11 +118,11 @@ class CreateFlashArray(FlashArray):
         Create a volume on the array.
         Syntax: <volume name> <1TB>
         """
-        print '[*] Creating Volume {}'.format(self.volumes[0])
+        print '\n[*] Creating Volume {}'.format(self.volumes[0])
         volume = self.volumes[0]
         volume_size = self.volumes[1]
         self.array.create_volume(volume, volume_size)
-        print '[*] Volume {} at size {} is now created!'.format(
+        print '\n[*] Volume {} at size {} is now created!'.format(
             volume, volume_size)
 
 
@@ -134,9 +134,9 @@ class DestroyFlashArray(FlashArray):
     def destroy_volume(self):
         """Destroy a requested volume."""
         for volume in self.volumes:
-            print '[*] Destroying Volume {}'.format(volume)
+            print '\n[*] Destroying Volume {}'.format(volume)
             self.array.destroy_volume(volume)
-            print '[*] Volume {} has been destroyed!'.format(volume)
+            print '\n[*] Volume {} has been destroyed!'.format(volume)
 
 
 class DecorateData(object):
