@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-"""
-    REST API client for hosts connecting to Pure Storage Flash Arrays.
+#!/usr/bin/env python3.6
+"""REST API client for hosts connecting to Pure Storage Flash Arrays.
     Copyright (C) 2017  Mitch O'Donnell devreap1@gmail.com
 
     This program is free software: you can redistribute it and/or modify
@@ -22,8 +21,8 @@ import purestorage_rest_api.flash_array as flash_array
 
 
 def parse_arguments():
-    """
-    Pass user arguments to main.
+    """Pass user arguments to main.
+    
     Subparser arguments are dependant on the root subparser invoked.
     """
     knowledge_articles = 'rest_session.py Copyright (C) 2017  Mitch O\'Donnell\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.'
@@ -93,17 +92,18 @@ def parse_arguments():
 
 
 def main():
-    """
-    Pull from one subparser; list, create, disconnect, and destroy.
+    """Pull from one subparser; list, create, disconnect, and destroy.
+    
     Then execute on subparser's argument's.
     """
     args = parse_arguments()
-
-    print '[*] Connecting to {}'.format(args.working_array)
+    
+    print(f'[*] Connecting to {args.working_array}')
 
     if args.command == 'list':
         array = flash_array.ListFlashArray(args.working_array, args.api_token, args.secure, args.volumes, args.drives,
                                            args.alert_distro, args.initiators, args.initiator_connections, args.hgroup_connect, args.connect, args.api_tokens)
+
         if array.volumes:
             decorated = flash_array.DecorateData(array.list_volumes())
             decorated.decorate_volumes()
