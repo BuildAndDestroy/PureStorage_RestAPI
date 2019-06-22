@@ -65,7 +65,7 @@ def parse_arguments():
     create_parser.add_argument(
         '--volume', nargs=2, help='Create Volume syntax: <volume_name> <1TB>')
     create_parser.add_argument(
-        '--snapshot', nargs='+', help='Add snapshot, multiple names will create a pgroup.')
+        '--snapshot', nargs=1, help='Create snapshot, provide volume name.')
     create_parser.add_argument(
         '--host', nargs='+', help='<hostname> and <wwn\'s or iqn\'s>.')
     create_parser.add_argument(
@@ -131,10 +131,14 @@ def main():
             decorated.decorate_user_api_tokens()
 
     if args.command == 'create':
-        array = flash_array.CreateFlashArray(
-            args.working_array, args.api_token, args.secure, args.volume, args.snapshot, args.host, args.hgroup)
+        # array = flash_array.CreateFlashArray(
+        #     args.working_array, args.api_token, args.secure, args.volume, args.snapshot, args.host, args.hgroup)
         if args.volume:
+            array = flash_array.CreateFlashArray(args.working_array, args.api_token, args.secure, args.volume)
             array.create_volume()
+        if args.snapshot:
+            array = flash_array.CreateFlashArray(args.working_array, args.api_token, args.secure, args.snapshot)
+            array.create_snapshot()
 
     if args.command == 'disconnect':
         array = flash_array.FlashArray(

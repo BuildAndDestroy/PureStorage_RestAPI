@@ -3,6 +3,8 @@
 flash_array.py holds all attributes needed
 to run the REST API client from rest_session.py file.
 """
+import datetime
+import random
 import prettytable
 import purestorage
 
@@ -109,13 +111,11 @@ class ListFlashArray(FlashArray):
 
 
 class CreateFlashArray(FlashArray):
-    """
-    Class inheritance to create FlashArray attributes.
-    """
+    """Class inheritance to create FlashArray attributes."""
 
     def create_volume(self):
-        """
-        Create a volume on the array.
+        """Create a volume on the array.
+
         Syntax: <volume name> <1TB>
         """
         print '\n[*] Creating Volume {}'.format(self.volumes[0])
@@ -125,6 +125,14 @@ class CreateFlashArray(FlashArray):
         print '\n[*] Volume {} at size {} is now created!'.format(
             volume, volume_size)
 
+    def create_snapshot(self):
+        """"""
+        print '\n[*] Creating snapshot for {}'.format(self.volumes[0])
+        date_time_now =  datetime.datetime.now()
+        todays_data_time = date_time_now.strftime("%d-%m-%Y-%H-%M-%S")
+        suffix = '{}-{}'.format(todays_data_time, str(random.random()).replace('.','-'))
+        self.array.create_snapshot(self.volumes[0], suffix=suffix)
+        print '\n[*] Snapshot {}.{} created!'.format(self.volumes[0], suffix)
 
 class DestroyFlashArray(FlashArray):
     """
