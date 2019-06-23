@@ -7,9 +7,9 @@ Change to the directory you have cloned this git repo and run:
 import pkg_resources
 from setuptools import setup
 
-__version__ = '1.4-space'
+__version__ = '2.1-python3-cleanup'
 packages = [ 'purestorage_rest_api' ]
-commands = ['rest_api = purestorage_rest_api.rest_session:main']
+commands = ['rest_api = purestorage_rest_api.rest_tool:main']
 
 setup(
     name                = 'PureStorage_RestAPI',

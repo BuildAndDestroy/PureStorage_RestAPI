@@ -44,10 +44,10 @@ def parse_arguments():
     list_parser = subparsers.add_parser('list', help='List contents.')
     list_parser.add_argument(
         '--volumes', action='store_true', help='List volumes on array.')
-    list_parser.add_argument('--alert_distro', action='store_true',
-                             help='Print a list of distros that receive alerts.')
     list_parser.add_argument(
         '--drives', action='store_true', help='List drives on the array.')
+    list_parser.add_argument('--alert_distro', action='store_true',
+                             help='Print a list of distros that receive alerts.')
     list_parser.add_argument(
         '--initiators', action='store_true', help='List hosts connected to the array.')
     list_parser.add_argument('--initiator_connections',
@@ -56,6 +56,10 @@ def parse_arguments():
         '--hgroup_connect', action='store_true', help='List host group connections.')
     list_parser.add_argument(
         '--connect', action='store_true', help='List connected arrays.')
+    list_parser.add_argument('--hosts', action='store_true', help='List all hosts registered.')
+    list_parser.add_argument('--hgroup')
+    list_parser.add_argument('--snapshots', nargs=1, help='List snapshots for a requested volume.')
+    list_parser.add_argument('--pgroups', action='store_true', help='Print pgroups stored on the FlashArray.')
     list_parser.add_argument(
         '--api_tokens', action='store_true', help='List all user\'s api tokens.')
 
@@ -84,7 +88,7 @@ def parse_arguments():
     destroy_parser.add_argument(
         '--volume', nargs='*', help='Destroy volumes passed as arguments.')
     destroy_parser.add_argument(
-        '--pgroup', nargs='+', help='Name of pgroup to be destroyed.')
+        '--pgroups', nargs='+', help='Name of pgroup to be destroyed.')
 
     args = parser.parse_args()
 
@@ -102,33 +106,30 @@ def main():
 
     if args.command == 'list':
         array = flash_array.ListFlashArray(args.working_array, args.api_token, args.secure, args.volumes, args.drives,
-                                           args.alert_distro, args.initiators, args.initiator_connections, args.hgroup_connect, args.connect, args.api_tokens)
+                                           args.alert_distro, args.initiators, args.initiator_connections, args.hgroup_connect, args.connect, args.hosts, args.hgroup, args.snapshots, args.pgroups, args.api_tokens)
 
         if array.volumes:
-            decorated = flash_array.DecorateData(array.list_volumes())
-            decorated.decorate_volumes()
+            flash_array.decorate_generic(array.list_volumes())
         if array.alert_distro:
-            decorated = flash_array.DecorateData(array.list_alert_distro())
-            decorated.decorate_alert_recipients()
+            flash_array.decorate_generic(array.list_alert_distro())
         if array.drives:
-            decorated = flash_array.DecorateData(array.list_array_drives())
-            decorated.decorate_list_drives()
+            flash_array.decorate_generic(array.list_array_drives())
         if array.initiators:
-            decorated = flash_array.DecorateData(array.list_initiators())
-            decorated.decorated_initiators()
+            flash_array.decorate_generic(array.list_initiators())
         if array.initiator_connections:
-            decorated = flash_array.DecorateData(
-                array.list_initiator_connections())
-            decorated.decorate_initiator_connections()
+            flash_array.decorate_generic(array.list_initiator_connections())
+        if array.hosts:
+            flash_array.decorate_generic(array.list_flasharray_hosts())
         if array.hgroup_connect:
-            decorated = flash_array.DecorateData(array.list_hgroup_connect())
-            decorated.decorated_hgroups()
+            flash_array.decorate_generic(array.list_hgroup_connect())
         if array.connect:
-            decorated = flash_array.DecorateData(array.list_connected_arrays())
-            decorated.decorated_connected_arrays()
+            flash_array.decorate_generic(array.list_connected_arrays())
         if args.api_tokens:
-            decorated = flash_array.DecorateData(array.user_api_tokens())
-            decorated.decorate_user_api_tokens()
+            flash_array.decorate_generic(array.user_api_tokens())
+        if args.pgroups:
+            flash_array.decorate_generic(array.list_pgroups())
+        if args.snapshots:
+            flash_array.decorate_generic(array.list_snapshots())
 
     if args.command == 'create':
         # array = flash_array.CreateFlashArray(
