@@ -14,8 +14,6 @@ Required modules:
 Work in progress. 
 "List" is the only fully functioning subparser. Create, Disconnect, and Destroy options will be added for hosts, volumes, and protection groups.
 
-"Create" a volume and "Destroy" a volume subparser is now up and running.
-
 
 Help Menu
 

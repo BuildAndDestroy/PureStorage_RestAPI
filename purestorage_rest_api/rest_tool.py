@@ -17,12 +17,12 @@
 """
 import argparse
 
-import purestorage_rest_api.flash_array as flash_array
+import purestorage_rest_api.flasharray_library as flasharray_library
 
 
 def parse_arguments():
     """Pass user arguments to main.
-    
+
     Subparser arguments are dependant on the root subparser invoked.
     """
     knowledge_articles = 'rest_session.py Copyright (C) 2017  Mitch O\'Donnell\nThis program comes with ABSOLUTELY NO WARRANTY.\nThis is free software, and you are welcome to redistribute it\nunder certain conditions.'
@@ -48,18 +48,18 @@ def parse_arguments():
         '--drives', action='store_true', help='List drives on the array.')
     list_parser.add_argument('--alert_distro', action='store_true',
                              help='Print a list of distros that receive alerts.')
-    list_parser.add_argument(
-        '--initiators', action='store_true', help='List hosts connected to the array.')
     list_parser.add_argument('--initiator_connections',
-                             nargs='+', help='List connection host argument.')
+                             nargs='*', help='Parse host names to see volume connections.')
     list_parser.add_argument(
-        '--hgroup_connect', action='store_true', help='List host group connections.')
+        '--hgroup_connect', action='store_true', help='List hosts within host groups.')
     list_parser.add_argument(
         '--connect', action='store_true', help='List connected arrays.')
-    list_parser.add_argument('--hosts', action='store_true', help='List all hosts registered.')
-    list_parser.add_argument('--hgroup')
-    list_parser.add_argument('--snapshots', nargs=1, help='List snapshots for a requested volume.')
-    list_parser.add_argument('--pgroups', action='store_true', help='Print pgroups stored on the FlashArray.')
+    list_parser.add_argument(
+        '--hosts', action='store_true', help='List all hosts registered.')
+    list_parser.add_argument('--snapshots', nargs='*',
+                             help='List snapshots for all requested volumes.')
+    list_parser.add_argument('--pgroups', action='store_true',
+                             help='Print pgroups stored on the FlashArray.')
     list_parser.add_argument(
         '--api_tokens', action='store_true', help='List all user\'s api tokens.')
 
@@ -70,7 +70,7 @@ def parse_arguments():
     create_parser.add_argument(
         '--snapshot', nargs=1, help='Create snapshot, provide volume name.')
     create_parser.add_argument(
-        '--host', nargs='+', help='<hostname> and <wwn\'s or iqn\'s>.')
+        '--hosts', nargs='+', help='<hostname> and <wwn\'s or iqn\'s>.')
     create_parser.add_argument(
         '--hgroup', nargs='+', help='<host group name> and <host names>.')
 
@@ -97,59 +97,66 @@ def parse_arguments():
 
 def main():
     """Pull from one subparser; list, create, disconnect, and destroy.
-    
-    Then execute on subparser's argument's.
+
+    Then execute on subparser's argument's to administer a Pure Storage FlashArray.
     """
     args = parse_arguments()
-    
+
     print(f'[*] Connecting to {args.working_array}')
 
     if args.command == 'list':
-        array = flash_array.ListFlashArray(args.working_array, args.api_token, args.secure, args.volumes, args.drives,
-                                           args.alert_distro, args.initiators, args.initiator_connections, args.hgroup_connect, args.connect, args.hosts, args.hgroup, args.snapshots, args.pgroups, args.api_tokens)
+        array = flasharray_library.ListFlashArray(args.working_array, args.api_token, args.secure, args.volumes, args.drives, args.alert_distro,
+                                                  args.initiator_connections, args.connect, args.hosts, args.hgroup_connect, args.snapshots, args.pgroups, args.api_tokens)
 
         if array.volumes:
-            flash_array.decorate_generic(array.list_volumes())
-        if array.alert_distro:
-            flash_array.decorate_generic(array.list_alert_distro())
+            flasharray_library.decorate_single_list(array.list_volumes())
         if array.drives:
-            flash_array.decorate_generic(array.list_array_drives())
-        if array.initiators:
-            flash_array.decorate_generic(array.list_initiators())
+            flasharray_library.decorate_single_list(array.list_array_drives())
+        if array.alert_distro:
+            flasharray_library.decorate_single_list(array.list_alert_distro())
         if array.initiator_connections:
-            flash_array.decorate_generic(array.list_initiator_connections())
-        if array.hosts:
-            flash_array.decorate_generic(array.list_flasharray_hosts())
-        if array.hgroup_connect:
-            flash_array.decorate_generic(array.list_hgroup_connect())
+            flasharray_library.decorate_multiple_lists(
+                array.list_initiator_connections())
         if array.connect:
-            flash_array.decorate_generic(array.list_connected_arrays())
-        if args.api_tokens:
-            flash_array.decorate_generic(array.user_api_tokens())
-        if args.pgroups:
-            flash_array.decorate_generic(array.list_pgroups())
+            flasharray_library.decorate_single_list(
+                array.list_connected_arrays())
+        if array.hosts:
+            flasharray_library.decorate_single_list(
+                array.list_flasharray_hosts())
+        if array.hgroup_connect:
+            flasharray_library.decorate_single_list(
+                array.list_hgroup_connect())
         if args.snapshots:
-            flash_array.decorate_generic(array.list_snapshots())
+            flasharray_library.decorate_multiple_lists(array.list_snapshots())
+        if args.pgroups:
+            flasharray_library.decorate_single_list(array.list_pgroups())
+        if args.api_tokens:
+            flasharray_library.decorate_single_list(array.user_api_tokens())
 
     if args.command == 'create':
-        # array = flash_array.CreateFlashArray(
+        # array = flasharray_library.CreateFlashArray(
         #     args.working_array, args.api_token, args.secure, args.volume, args.snapshot, args.host, args.hgroup)
-        if args.volume:
-            array = flash_array.CreateFlashArray(args.working_array, args.api_token, args.secure, args.volume)
-            array.create_volume()
-        if args.snapshot:
-            array = flash_array.CreateFlashArray(args.working_array, args.api_token, args.secure, args.snapshot)
-            array.create_snapshot()
+        # if args.volume:
+        #     array = flasharray_library.CreateFlashArray(
+        #         args.working_array, args.api_token, args.secure, args.volume)
+        #     array.create_volume()
+        # if args.snapshot:
+        #     array = flasharray_library.CreateFlashArray(
+        #         args.working_array, args.api_token, args.secure, args.snapshot)
+        #     array.create_snapshot()
+        print('Coming Soon!')
 
     if args.command == 'disconnect':
-        array = flash_array.FlashArray(
-            args.working_array, args.api_token, args.secure, args.host, args.array, args.hgroup)
+        # array = flasharray_library.FlashArray(
+        #     args.working_array, args.api_token, args.secure, args.host, args.array, args.hgroup)
+        print('Comming Soon!')
 
     if args.command == 'destroy':
-        array = flash_array.DestroyFlashArray(
-            args.working_array, args.api_token, args.secure, args.volume, args.pgroup)
-        if args.volume:
-            array.destroy_volume()
+        # array = flasharray_library.DestroyFlashArray(
+        #     args.working_array, args.api_token, args.secure, args.volume, args.pgroup)
+        # if args.volume:
+        #     array.destroy_volume()
+        print('Coming Soon!')
 
     array.disconnect_from_flasharray()
 
