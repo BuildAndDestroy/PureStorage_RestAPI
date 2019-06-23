@@ -7,7 +7,7 @@ Change to the directory you have cloned this git repo and run:
 import pkg_resources
 from setuptools import setup
 
-__version__ = '2.3-python3-list-completes'
+__version__ = '3.1-create-completes'
 packages = [ 'purestorage_rest_api' ]
 commands = ['rest_api = purestorage_rest_api.rest_tool:main']
 

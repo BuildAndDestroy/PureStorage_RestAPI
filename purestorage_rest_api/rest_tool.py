@@ -68,9 +68,9 @@ def parse_arguments():
     create_parser.add_argument(
         '--volume', nargs=2, help='Create Volume syntax: <volume_name> <1TB>')
     create_parser.add_argument(
-        '--snapshot', nargs=1, help='Create snapshot, provide volume name.')
+        '--snapshots', nargs='*', help='Create snapshots, provide volume names.')
     create_parser.add_argument(
-        '--hosts', nargs='+', help='<hostname> and <wwn\'s or iqn\'s>.')
+        '--host', nargs='+', help='<hostname> and <wwn\'s or iqn\'s>.')
     create_parser.add_argument(
         '--hgroup', nargs='+', help='<host group name> and <host names>.')
 
@@ -134,17 +134,16 @@ def main():
             flasharray_library.decorate_single_list(array.user_api_tokens())
 
     if args.command == 'create':
-        # array = flasharray_library.CreateFlashArray(
-        #     args.working_array, args.api_token, args.secure, args.volume, args.snapshot, args.host, args.hgroup)
-        # if args.volume:
-        #     array = flasharray_library.CreateFlashArray(
-        #         args.working_array, args.api_token, args.secure, args.volume)
-        #     array.create_volume()
-        # if args.snapshot:
-        #     array = flasharray_library.CreateFlashArray(
-        #         args.working_array, args.api_token, args.secure, args.snapshot)
-        #     array.create_snapshot()
-        print('Coming Soon!')
+        array = flasharray_library.CreateFlashArray(
+            args.working_array, args.api_token, args.secure, args.volume, args.snapshots, args.host, args.hgroup)
+        if args.volume:
+            array.create_volume()
+        if args.snapshots:
+            array.create_snapshots()
+        if args.host:
+            flasharray_library.create_host()
+        if args.hgroup:
+            flasharray_library.create_hgroup()
 
     if args.command == 'disconnect':
         # array = flasharray_library.FlashArray(
@@ -156,7 +155,12 @@ def main():
         #     args.working_array, args.api_token, args.secure, args.volume, args.pgroup)
         # if args.volume:
         #     array.destroy_volume()
-        print('Coming Soon!')
+        if args.host:
+            print('Coming Soon!')
+        if args.array:
+            print('Coming Soon!')
+        if args.hgroup:
+            print('Coming Soon!')
 
     array.disconnect_from_flasharray()
 

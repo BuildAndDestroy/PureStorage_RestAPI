@@ -134,29 +134,43 @@ class ListFlashArray(FlashArray):
 
 
 class CreateFlashArray(FlashArray):
-    """Class inheritance to create FlashArray attributes."""
+    """Create objects on the FlashArray."""
+    def __init__(self, working_array, api_token, secure, volume=None, snapshots=None, host=None, hgroup=None):
+        super().__init__(working_array, api_token, secure)
+        self.volume = volume or None
+        self.snapshots = snapshots or None
+        self.host = host or None
+        self.hgroup = hgroup or None
 
     def create_volume(self):
         """Create a volume on the array.
 
         Syntax: <volume name> <1TB>
         """
-        print(f'\n[*] Creating Volume {self.volumes[0]}')
-        volume = self.volumes[0]
-        volume_size = self.volumes[1]
+        print(f'\n[*] Creating Volume {self.volume[0]}')
+        volume = self.volume[0]
+        volume_size = self.volume[1]
         self.array.create_volume(volume, volume_size)
         print(f'\n[*] Volume {volume} at size {volume_size} is now created!')
 
-    def create_snapshot(self):
-        """"""
-        print(f'\n[*] Creating snapshot for {self.volumes[0]}')
-        date_time_now = datetime.datetime.now()
-        todays_data_time = date_time_now.strftime("%d-%m-%Y-%H-%M-%S")
-        suffix = '{}-{}'.format(todays_data_time,
-                                str(random.random()).replace('.', '-'))
-        self.array.create_snapshot(self.volumes[0], suffix=suffix)
-        print(f'\n[*] Snapshot {self.volumes[0]}.{suffix} created!')
+    def create_snapshots(self):
+        """Create a snapshot for given volumes, snapshot names will be unique."""
+        for volume_name in self.snapshots:
+            print(f'\n[*] Creating snapshot for {volume_name}')
+            date_time_now = datetime.datetime.now()
+            todays_data_time = date_time_now.strftime("%d-%m-%Y-%H-%M-%S")
+            suffix = '{}-{}'.format(todays_data_time,
+                                    str(random.random()).replace('.', '-'))
+            self.array.create_snapshot(volume_name, suffix=suffix)
+            print(f'\n[*] Snapshot {volume_name}.{suffix} created!')
 
+    def create_host(self):
+        """Coming Soon."""
+        print('Coming Soon!')
+
+    def create_hgroup(self):
+        """Coming Soon."""
+        print('Coming Soon!')
 
 def decorate_single_list(import_list):
     """Import a single list of dictionaries and decorate."""

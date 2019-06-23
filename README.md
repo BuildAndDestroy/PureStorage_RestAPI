@@ -12,7 +12,10 @@ Required modules:
     sudo pip install --upgrade .
 
 Work in progress. 
-"List" is the only fully functioning subparser. Create, Disconnect, and Destroy options will be added for hosts, volumes, and protection groups.
+"List" is the only fully functioning subparser. 
+"Create" volume and snapshots currently work. 
+
+"Disconnect" and "Destroy" options will be added for hosts, volumes, and protection groups.
 
 
 Help Menu
