@@ -18,6 +18,11 @@ class FlashArray(object):
         self.array = purestorage.FlashArray(
             self.working_array, api_token=self.api_token, verify_https=self.https)
 
+    def this_flasharray(self):
+        """An option to return the FlashArray name and version."""
+        flasharray = self.array.get()
+        return [flasharray]
+
     def disconnect_from_flasharray(self):
         """Disconnect from the array, ending REST session."""
         print(f'\n[*] Disconnecting from {self.working_array}')
@@ -171,6 +176,28 @@ class CreateFlashArray(FlashArray):
     def create_hgroup(self):
         """Coming Soon."""
         print('Coming Soon!')
+
+class DestroyFlashArray(FlashArray):
+    """docstring for ClassName"""
+    def __init__(self, working_array, api_token, secure, volumes=None, pgroups=None):
+        super().__init__(working_array, api_token, secure)
+        self.volumes = volumes or None
+        self.pgroups = pgroups or None
+
+    def destroy_volumes(self):
+        """Return a list of destroyed volumes from dictionary output."""
+        destroyed_volumes_list = []
+        for volume in self.volumes:
+            print(f'\n[*] Destroying Volume {volume}.')
+            destroyed_volume = self.array.destroy_volume(volume)
+            destroyed_volumes_list.append(destroyed_volume)
+        return destroyed_volumes_list
+
+
+    def destroy_pgroups(self):
+        """"""
+        print('\nComing Soon!')
+
 
 def decorate_single_list(import_list):
     """Import a single list of dictionaries and decorate."""

@@ -84,11 +84,11 @@ def parse_arguments():
         '--hgroup', nargs='+', help='Delete a shared connection between a host group and a volume.')
 
     destroy_parser = subparsers.add_parser(
-        'destroy', help='Destroy an option on the array.')
+        'destroy', help='Destroy an option on the array.\n!!### ~WARNING DATA LOSS~ ###!!')
     destroy_parser.add_argument(
-        '--volume', nargs='*', help='Destroy volumes passed as arguments.')
+        '--volumes', nargs='*', help='Name of volumes and/or volume-snapshots to be destroyed.')
     destroy_parser.add_argument(
-        '--pgroups', nargs='+', help='Name of pgroup to be destroyed.')
+        '--pgroups', nargs='*', help='Name of pgroups to be destroyed.')
 
     args = parser.parse_args()
 
@@ -148,18 +148,14 @@ def main():
     if args.command == 'disconnect':
         # array = flasharray_library.FlashArray(
         #     args.working_array, args.api_token, args.secure, args.host, args.array, args.hgroup)
-        print('Comming Soon!')
+        print('Coming Soon!')
 
     if args.command == 'destroy':
-        # array = flasharray_library.DestroyFlashArray(
-        #     args.working_array, args.api_token, args.secure, args.volume, args.pgroup)
-        # if args.volume:
-        #     array.destroy_volume()
-        if args.host:
-            print('Coming Soon!')
-        if args.array:
-            print('Coming Soon!')
-        if args.hgroup:
+        array = flasharray_library.DestroyFlashArray(
+            args.working_array, args.api_token, args.secure, args.volumes, args.pgroups)
+        if args.volumes:
+            flasharray_library.decorate_single_list(array.destroy_volumes())
+        if args.pgroups:
             print('Coming Soon!')
 
     array.disconnect_from_flasharray()

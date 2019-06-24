@@ -11,12 +11,12 @@ Required modules:
   Upgrading will need to be ran in the same directory as setup.py, run:
     sudo pip install --upgrade .
 
-Work in progress. 
-"List" is the only fully functioning subparser. 
-"Create" volume and snapshots currently work. 
+Work in progress.
+* "List" is the only fully functioning subparser. 
+* "Create" volume and snapshots currently work. 
+* "Disconnect" and "Destroy" options will be added for hosts, volumes, and protection groups.
 
-"Disconnect" and "Destroy" options will be added for hosts, volumes, and protection groups.
-
+* Expect output to be verbose if using a Self Signed Certificate. Recommended to use a Signed Certificate for each FlashArray in a Production Environment.
 
 Help Menu
 
