@@ -1,11 +1,11 @@
-PureStorage_RestAPI
+# PureStorage_RestAPI
 
-Required modules:
-
+## Required modules:
+  ```
   prettytable
   purestorage
-
-  Install via Linux:
+  ```
+  ###### Install via Linux:
   Clone this repo or download ZIP under /opt/ (should look like /opt/PureStorage_RestAPI/) and run in the PureStorage_RestAPI directory:
     sudo pip install .
   Upgrading will need to be ran in the same directory as setup.py, run:
@@ -18,8 +18,8 @@ Work in progress.
 
 * Expect output to be verbose if using a Self Signed Certificate. Recommended to use a Signed Certificate for each FlashArray in a Production Environment.
 
-Help Menu
-
+###### Help Menu
+```
 usage: rest_api [-h] [-s]
                        working_array api_token
                        {list,create,disconnect,destroy} ...
@@ -58,6 +58,7 @@ rest_api Copyright (C) 2017  Mitch O'Donnell
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
 under certain conditions.
+```
 
 Pure Storage PyPi Documentation: 
 https://pythonhosted.org/purestorage/quick_start.html
