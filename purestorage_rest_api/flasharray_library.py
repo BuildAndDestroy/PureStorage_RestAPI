@@ -9,7 +9,7 @@ import purestorage
 
 
 class FlashArray(object):
-    """QConnect through REST API and disconnect."""
+    """Connect through REST API and disconnect."""
 
     def __init__(self, working_array, api_token, secure):
         self.working_array = working_array
@@ -27,6 +27,26 @@ class FlashArray(object):
         """Disconnect from the array, ending REST session."""
         print(f'\n[*] Disconnecting from {self.working_array}')
         self.array.invalidate_cookie()
+
+
+class DisconnectFlashArray(FlashArray):
+    """Disconnect Class for the Disconnect options from argparse"""
+
+    def __init__(self, working_array, api_token, secure, host):
+        super().__init__(working_array, api_token, secure)
+        self.host = host
+
+    def disconnect_host_volume(self):
+        """Disconnect a volume from a host.
+
+        Syntax: <Host name> <Volume name>
+        """
+        hostname = self.host[0]
+        volume_name = self.host[1]
+        print(f'\n[*] Disconnecting volume "{volume_name}" from volume "{hostname}".')
+        disconnect_host_volume = self.array.disconnect_host(
+            hostname, volume_name)
+        return [disconnect_host_volume]
 
 
 class ListFlashArray(FlashArray):
@@ -140,6 +160,7 @@ class ListFlashArray(FlashArray):
 
 class CreateFlashArray(FlashArray):
     """Create objects on the FlashArray."""
+
     def __init__(self, working_array, api_token, secure, volume=None, snapshots=None, host=None, hgroup=None):
         super().__init__(working_array, api_token, secure)
         self.volume = volume or None
@@ -170,15 +191,20 @@ class CreateFlashArray(FlashArray):
             print(f'\n[*] Snapshot {volume_name}.{suffix} created!')
 
     def create_host(self):
-        """Coming Soon."""
+        """Coming Soon.
+        Example:    api.create_host('mitch-host', iqnlist=['iqn.1986-03.com.XXX:01:0003bad935da.4906be64'])
+        """
+        # print(f'\n[*] Creating host {self.host}. ')
         print('Coming Soon!')
 
     def create_hgroup(self):
         """Coming Soon."""
         print('Coming Soon!')
 
+
 class DestroyFlashArray(FlashArray):
     """docstring for ClassName"""
+
     def __init__(self, working_array, api_token, secure, volumes=None, pgroups=None):
         super().__init__(working_array, api_token, secure)
         self.volumes = volumes or None
@@ -193,9 +219,8 @@ class DestroyFlashArray(FlashArray):
             destroyed_volumes_list.append(destroyed_volume)
         return destroyed_volumes_list
 
-
     def destroy_pgroups(self):
-        """"""
+        """Destroy pgroup."""
         print('\nComing Soon!')
 
 

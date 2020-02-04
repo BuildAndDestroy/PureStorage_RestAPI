@@ -77,7 +77,7 @@ def parse_arguments():
     disconnect_parser = subparsers.add_parser(
         'disconnect', help='Disconnect options on the array.')
     disconnect_parser.add_argument(
-        '--host', nargs='+', help='Disconnect <host name> from <volume name>.')
+        '--host', nargs=2, help='Disconnect <host name> from <volume name>.')
     disconnect_parser.add_argument(
         '--array', nargs='+', help='DNS name or IP address of other array.')
     disconnect_parser.add_argument(
@@ -146,9 +146,12 @@ def main():
             flasharray_library.create_hgroup()
 
     if args.command == 'disconnect':
-        # array = flasharray_library.FlashArray(
-        #     args.working_array, args.api_token, args.secure, args.host, args.array, args.hgroup)
-        print('Coming Soon!')
+        print(args.host)
+        array = flasharray_library.DisconnectFlashArray(
+            args.working_array, args.api_token, args.secure, args.host)
+        if args.host:
+            flasharray_library.decorate_single_list(
+                array.disconnect_host_volume())
 
     if args.command == 'destroy':
         array = flasharray_library.DestroyFlashArray(
